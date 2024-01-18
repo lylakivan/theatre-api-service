@@ -21,6 +21,6 @@ router.register("reservation", ReservationViewSet)
 router.register("performance", PerformanceViewSet)
 router.register("tickets", TicketViewSet)
 
-urlpatterns = [path(""), include(router.urls)]
+urlpatterns = [path("", include(router.urls))]
 
 app_name = "theatre"
