@@ -18,12 +18,25 @@ from theatre.serializers import (
     PlaySerializer,
     PerformanceSerializer,
     TicketSerializer,
+    ActorListSerializer,
+    ActorDetailSerializer,
+    PerformanceListSerializer,
+    PerformanceDetailSerializer,
+    PlayListSerializer,
+    PlayDetailSerializer,
 )
 
 
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ActorListSerializer
+        if self.action == "retrieve":
+            return ActorDetailSerializer
+        return ActorSerializer
 
 
 class GenreViewSet(viewsets.ViewSet):
@@ -47,6 +60,20 @@ class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.all()
     serializer_class = PlaySerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ("retrieve", "list"):
+            queryset = queryset.prefetch_related("actor", "genre")
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PlayListSerializer
+        if self.action == "retrieve":
+            return PlayDetailSerializer
+        return PlaySerializer
+
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
     queryset = TheatreHall.objects.all()
@@ -56,6 +83,20 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.all()
     serializer_class = PerformanceSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ("retrieve", "list"):
+            queryset = queryset.select_related("play", "theatre_hall")
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PerformanceListSerializer
+        if self.action == "retrieve":
+            return PerformanceDetailSerializer
+        return PerformanceSerializer
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
