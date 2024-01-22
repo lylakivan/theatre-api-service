@@ -70,13 +70,13 @@ class Ticket(models.Model):
         Performance,
         on_delete=models.SET_NULL,
         null=True,
-        related_name="ticket_performance",
+        related_name="tickets",
     )
     reservation = models.ForeignKey(
         Reservation,
         on_delete=models.SET_NULL,
         null=True,
-        related_name="ticket_reservation",
+        related_name="tickets",
     )
 
     class Meta:
@@ -86,6 +86,7 @@ class Ticket(models.Model):
                 name="unique_ticket"
             )
         ]
+        ordering = ["row", "seat"]
 
     def clean(self) -> None:
         if not (1 <= self.row <= self.performance.theatre_hall.rows):

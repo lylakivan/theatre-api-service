@@ -1,3 +1,4 @@
+from django.db.models import F, Count
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -110,7 +111,18 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
 
         if self.action in ("retrieve", "list"):
-            queryset = queryset.select_related("play", "theatre_hall")
+            queryset = (
+                queryset
+                .select_related("play", "theatre_hall")
+                .annotate(
+                    tickets_available=(
+                        F("theatre_hall__rows")
+                        * F("theatre_hall__seats_in_row")
+                        - Count("tickets")
+                    )
+                )
+            )
+
         return queryset
 
     def get_serializer_class(self):
