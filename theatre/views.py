@@ -1,5 +1,6 @@
 from django.db.models import F, Count
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from theatre.models import (
@@ -28,9 +29,15 @@ from theatre.serializers import (
 )
 
 
+class Pagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+
+
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    pagination_class = Pagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -60,6 +67,8 @@ class GenreViewSet(viewsets.ViewSet):
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.all()
     serializer_class = PlaySerializer
+    pagination_class = Pagination
+
 
     @staticmethod
     def _params_to_ints(qs):
@@ -136,6 +145,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
+    pagination_class = Pagination
 
     def get_queryset(self):
         return Reservation.objects.select_related("user").filter(
