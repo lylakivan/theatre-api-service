@@ -56,7 +56,7 @@ class Reservation(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="reservation"
+        related_name="reservations"
     )
 
     def __str__(self):
@@ -121,4 +121,4 @@ class Ticket(models.Model):
         )
 
     def __str__(self):
-        return f"{self.performance.play.title}, {self.row}, {self.seat}"
+        return f"{self.performance.play.title} row {self.row} seat {self.seat}"
