@@ -39,8 +39,16 @@ def play_image_file_path(instance, filename):
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    actor = models.ManyToManyField(Actor, related_name="actor_plays")
-    genre = models.ManyToManyField(Genre, related_name="genre_plays")
+    actor = models.ManyToManyField(
+        Actor,
+        related_name="actor_plays",
+        blank=True
+    )
+    genre = models.ManyToManyField(
+        Genre,
+        related_name="genre_plays",
+        blank=True
+    )
     image = models.ImageField(null=True, upload_to=play_image_file_path)
 
 
@@ -68,11 +76,11 @@ class Reservation(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="reservations"
+        related_name="reservation"
     )
 
     def __str__(self):
-        return f"{self.user.username}, created_at: {self.created_at}"
+        return f"{self.user.email}, created_at: {self.created_at}"
 
 
 class Ticket(models.Model):
