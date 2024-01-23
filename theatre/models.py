@@ -44,7 +44,6 @@ class Play(models.Model):
     image = models.ImageField(null=True, upload_to=play_image_file_path)
 
 
-
 class TheatreHall(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
