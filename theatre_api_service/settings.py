@@ -81,10 +81,10 @@ WSGI_APPLICATION = "theatre_api_service.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("DB_HOST"),
-        "NAME": os.environ.get("DB_DB"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("db_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "NAME": os.environ.get("POSTGRES_HOST"),
+        "USER": os.environ.get("POSTGRES_HOST"),
+        "PASSWORD": os.environ.get("POSTGRES_HOST"),
     }
 }
 
