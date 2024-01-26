@@ -49,7 +49,10 @@ class Play(models.Model):
         related_name="genre_plays",
         blank=True
     )
-    image = models.ImageField(null=True, upload_to=play_image_file_path)
+    image = models.ImageField(
+        null=True,
+        upload_to=play_image_file_path
+    )
 
 
 class TheatreHall(models.Model):
@@ -62,22 +65,23 @@ class TheatreHall(models.Model):
 
 
 class Performance(models.Model):
-    play = models.ForeignKey(
-        Play, on_delete=models.CASCADE, related_name="performances"
-    )
-    theatre_hall = models.ForeignKey(
-        TheatreHall, on_delete=models.CASCADE, related_name="performances"
-    )
+    play = models.ForeignKey(Play,
+                             on_delete=models.CASCADE,
+                             related_name="performances"
+                             )
+    theatre_hall = models.ForeignKey(TheatreHall,
+                                     on_delete=models.CASCADE,
+                                     related_name="performances"
+                                     )
     show_time = models.DateTimeField()
 
 
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="reservation"
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="reservation"
+                             )
 
     def __str__(self):
         return f"{self.user.email}, created_at: {self.created_at}"
@@ -86,26 +90,23 @@ class Reservation(models.Model):
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    performance = models.ForeignKey(
-        Performance,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="tickets",
-    )
-    reservation = models.ForeignKey(
-        Reservation,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="tickets",
-    )
+    performance = models.ForeignKey(Performance,
+                                    on_delete=models.SET_NULL,
+                                    null=True,
+                                    related_name="tickets",
+                                    )
+    reservation = models.ForeignKey(Reservation,
+                                    on_delete=models.SET_NULL,
+                                    null=True, related_name="tickets",
+                                    )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["row", "seat"],
-                name="unique_ticket"
-            )
+        constraints = [models.UniqueConstraint(
+            fields=["row", "seat"],
+            name="unique_ticket"
+        )
         ]
+
         ordering = ["row", "seat"]
 
     def clean(self) -> None:

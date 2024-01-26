@@ -134,12 +134,11 @@ class PlayViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="title",
-                description="Filter by title",
-                type=str,
-            ),
+        parameters=[OpenApiParameter(
+            name="title",
+            description="Filter by title",
+            type=str,
+        ),
         ]
     )
     def list(self, request, *args, **kwargs):
@@ -193,12 +192,11 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         return PerformanceSerializer
 
     @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="play",
-                type=int,
-                description="Filter by play id"
-            ),
+        parameters=[OpenApiParameter(
+            name="play",
+            type=int,
+            description="Filter by play id"
+        ),
         ]
     )
     def list(self, request, *args, **kwargs):
