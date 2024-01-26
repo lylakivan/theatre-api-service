@@ -60,7 +60,7 @@ class PlayDetailSerializer(PlaySerializer):
     actor = ActorListSerializer(many=True, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
     theatre_hall_name = serializers.CharField(
-        source="performance_play.performance.name", read_only=True
+        source="performances.performance.name", read_only=True
     )
 
     class Meta:
