@@ -109,7 +109,7 @@ class Ticket(models.Model):
 
         ordering = ["row", "seat"]
 
-    def clean(self) -> None:
+    def clean(self):
         if not (1 <= self.row <= self.performance.theatre_hall.rows):
             raise ValidationError(
                 {
@@ -135,7 +135,7 @@ class Ticket(models.Model):
         force_update: bool = False,
         using: str = None,
         update_fields: list = None,
-    ) -> None:
+    ):
         self.full_clean()
         return super(Ticket, self).save(
             force_insert, force_update, using, update_fields
