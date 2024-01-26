@@ -142,14 +142,13 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_THROTTLE_RATES": {"anon": "100/day", "user": "1000/day"},
-
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': "Theatre API",
-    'DESCRIPTION': "API for remote theater reservations and seat selection online.",
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Theatre API",
+    "DESCRIPTION": "API for remote theater reservations and seat selection online.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
         "deepLinking": True,
         "defaultModelRendering": "model",
