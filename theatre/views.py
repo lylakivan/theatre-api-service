@@ -64,7 +64,7 @@ class GenreViewSet(viewsets.ViewSet):
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
@@ -128,7 +128,7 @@ class PlayViewSet(viewsets.ModelViewSet):
         play = self.get_object()
         serializer = self.get_serializer(play, data=request.data)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
 
