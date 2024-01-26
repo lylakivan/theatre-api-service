@@ -28,7 +28,8 @@ from theatre.serializers import (
     PerformanceListSerializer,
     PerformanceDetailSerializer,
     PlayListSerializer,
-    PlayDetailSerializer, PlayImageSerializer,
+    PlayDetailSerializer,
+    PlayImageSerializer,
 )
 
 
@@ -48,7 +49,7 @@ class ActorViewSet(viewsets.ModelViewSet):
             return ActorListSerializer
         if self.action == "retrieve":
             return ActorDetailSerializer
-        return ActorSerializer
+        return self.serializer_class
 
 
 class GenreViewSet(viewsets.ViewSet):
@@ -114,7 +115,7 @@ class PlayViewSet(viewsets.ModelViewSet):
         if self.action == "upload_image":
             return PlayImageSerializer
 
-        return PlaySerializer
+        return self.serializer_class
 
     @action(
         methods=["POST"],
@@ -134,11 +135,12 @@ class PlayViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
-        parameters=[OpenApiParameter(
-            name="title",
-            description="Filter by title",
-            type=str,
-        ),
+        parameters=[
+            OpenApiParameter(
+                name="title",
+                description="Filter by title",
+                type=str,
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
@@ -162,21 +164,16 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         play = self.request.query_params.get("play")
         if play:
             play_ids = [
-                int(play_id) for play_id in self.request.query_params.
-                get("play").split(",")
+                int(play_id)
+                for play_id in self.request.query_params.get("play").split(",")
             ]
             queryset = queryset.filter(play__id__in=play_ids)
 
         if self.action in ("retrieve", "list"):
-            queryset = (
-                queryset
-                .select_related("play", "theatre_hall")
-                .annotate(
-                    tickets_available=(
-                        F("theatre_hall__rows")
-                        * F("theatre_hall__seats_in_row")
-                        - Count("tickets")
-                    )
+            queryset = queryset.select_related("play", "theatre_hall").annotate(
+                tickets_available=(
+                    F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
+                    - Count("tickets")
                 )
             )
 
@@ -184,19 +181,16 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            return PerformanceListSerializer
+            return self.serializer_class
 
         if self.action == "retrieve":
-            return PerformanceDetailSerializer
+            return self.serializer_class
 
-        return PerformanceSerializer
+        return self
 
     @extend_schema(
-        parameters=[OpenApiParameter(
-            name="play",
-            type=int,
-            description="Filter by play id"
-        ),
+        parameters=[
+            OpenApiParameter(name="play", type=int, description="Filter by play id"),
         ]
     )
     def list(self, request, *args, **kwargs):
